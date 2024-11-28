@@ -37,7 +37,7 @@ static int listdir(lua_State* L) { // listdir(path: string, type: integer) -> ta
 
 	int index = 1; // start from 1
 	if (!(fs::is_directory(dir_path))) {
-		return luaL_error(L, "expected a vaild dir path (got", dir_path, ")");
+		return luaL_error(L, "expected a vaild dir path (got %s)", dir_path);
 	}
 	lua_newtable(L);
 	for (const auto& entry : fs::directory_iterator(dir_path)) {
@@ -54,6 +54,12 @@ static int listdir(lua_State* L) { // listdir(path: string, type: integer) -> ta
 	}
 	return 1;
 }
+
+static int get_cwd(lua_State* L) { // get_cwd() -> string
+	lua_pushstring(L, fs::current_path().string().c_str());
+	return 1;
+}
+
 
 static inline void registerCfunction(lua_State* L, lua_CFunction func, const char* name, int stack = -2) {
 	int base = lua_gettop(L);
